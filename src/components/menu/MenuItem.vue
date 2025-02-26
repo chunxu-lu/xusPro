@@ -12,7 +12,7 @@
   </el-menu-item>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { defineProps } from 'vue'
 import { useRouter } from 'vue-router'
 defineOptions({name:'MenuItem'})

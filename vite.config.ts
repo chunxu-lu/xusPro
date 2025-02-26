@@ -42,6 +42,9 @@ export default defineConfig({
       scss: {}
     }
   },
+  build: {
+    outDir: 'dist', // 指定打包输出目录
+  },
   server: {
     proxy: {
       // 选项写法

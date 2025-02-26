@@ -41,6 +41,7 @@
   import { uploadImage, getImages } from '@/api/upload'
   import { ElMessage } from 'element-plus'
   import { ref, onMounted } from 'vue'
+  import type { UploadFile } from 'element-plus'
   
   const images = ref<string[]>([])
   
@@ -60,9 +61,9 @@
   const flag = ref(1)
   const progress = ref(0)
   const status = ref('')
-  const selectedFile = ref<File | null>(null)
+  const selectedFile = ref<UploadFile | null>(null)
   
-  const handleFileChange = (file: File) => {
+  const handleFileChange = (file: UploadFile) => {
     selectedFile.value = file
   }
   
@@ -103,7 +104,7 @@
       ElMessage.success('表单提交成功')
       status.value = '上传成功！'
       progress.value = 100
-    } catch (error) {
+    } catch (error:any) {
       ElMessage.error('表单提交失败')
       status.value = '上传失败：' + error.message
       progress.value = 0

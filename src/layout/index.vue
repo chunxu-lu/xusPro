@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import MenuItem from './menu/MenuItem.vue' // 引入递归组件
+import MenuItem from '@/components/menu/MenuItem.vue' // 引入递归组件
 import { User, CaretBottom,House,Tools } from '@element-plus/icons-vue'
 import { useThemeStore } from '@/pinia'
 import { useRouter } from 'vue-router'
