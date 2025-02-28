@@ -5,9 +5,9 @@ export function uploadImage(file: any, imgName: string, flag: number): Promise<R
   formData.append('file', file)
   formData.append('imgName', imgName)
   formData.append('flag', flag.toString())
-  return request('/api/upload', formData, 'post')
+  return request('/upload', formData, 'post')
 }
 
 export function getImages(): Promise<string[]> {
-  return request('/api/getImages', {}, 'get')
+  return request('/getImages', {}, 'get')
 }

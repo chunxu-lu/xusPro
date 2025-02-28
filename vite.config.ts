@@ -44,14 +44,24 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist', // 指定打包输出目录
+    rollupOptions: {
+      output: {
+        // 将所有的 JS 文件打包到一个文件中
+        manualChunks: undefined,
+        // 配置输出文件夹结构
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
+      }
+    }
   },
   server: {
     proxy: {
       // 选项写法
       '/api': {
-        target: 'http://192.168.1.29:8080',
+        target: 'http://192.168.1.29:8080/api',
         changeOrigin: true,
-        rewrite: (path) => path.replace(new RegExp(`^/api`), ""),
+        rewrite: path => path.replace(new RegExp(`^/api`), ''),
         secure: false // 如果是 HTTPS 目标，则设为 true
       }
     }
