@@ -3,7 +3,11 @@
     <el-container>
       <el-header class="header">
         <div class="header-left">
-          <span class="system-name">vite&springboot</span>
+          <el-radio-group v-model="isCollapse">
+            <el-radio-button :value="false">expand</el-radio-button>
+            <el-radio-button :value="true">collapse</el-radio-button>
+          </el-radio-group>
+          <div class="system-name">vite&springboot</div>
         </div>
         <div class="header-right">
           <el-dropdown>
@@ -23,11 +27,7 @@
         </div>
       </el-header>
       <el-container>
-        <el-aside width="200px"
-          ><el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
-            <el-radio-button :value="false">expand</el-radio-button>
-            <el-radio-button :value="true">collapse</el-radio-button>
-          </el-radio-group>
+        <el-aside :class="isCollapse ? 'collapse-side' : 'expand-side'">
           <el-menu
             default-active="2"
             class="el-menu-vertical-demo"
@@ -36,7 +36,7 @@
             @close="handleClose"
           >
             <template v-for="item in menuItems" :key="item.index">
-              <menu-item :item="item"/>
+              <menu-item :item="item" />
             </template> </el-menu
         ></el-aside>
         <el-main>
@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import MenuItem from '@/components/menu/MenuItem.vue' // 引入递归组件
-import { User, CaretBottom,House,Tools } from '@element-plus/icons-vue'
+import { User, CaretBottom, House, Tools } from '@element-plus/icons-vue'
 import { useThemeStore } from '@/pinia'
 import { useRouter } from 'vue-router'
 
@@ -78,10 +78,10 @@ const menuItems = [
       {
         title: '上传图片',
         groupTitle: true,
-        path: '/function/upload',
-      },
+        path: '/function/upload'
+      }
     ]
-  },
+  }
 ]
 
 const isCollapse = ref(false)
@@ -108,6 +108,8 @@ const handleLogout = () => {
   border-bottom: 1px solid var(--el-border-color-light);
 
   .header-left {
+    display: flex;
+    align-items: center;
     .system-name {
       font-size: 18px;
       font-weight: bold;
@@ -139,5 +141,21 @@ const handleLogout = () => {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
+}
+
+.expand-side {
+  width: 200px;
+}
+.collapse-side {
+  width: 100px;
+}
+@media (max-width: 768px) {
+  .expand-side {
+    position: absolute;
+    z-index: 1;
+  }
+  .collapse-side {
+    width: 0;
+  }
 }
 </style>

@@ -1,0 +1,9 @@
+:root {
+  --form-bg-color: #fff;
+  --form-bg-color-dark: #2c2c2c; /* 更浅的暗色背景颜色 */
+  --text-color: #333;
+}
+
+html.dark {
+  --text-color: #fff;
+}

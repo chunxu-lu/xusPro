@@ -31,6 +31,8 @@ declare module 'vue' {
     MenuItem: typeof import('./components/menu/MenuItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    WeatherCanvas: typeof import('./components/WeatherCanvas.vue')['default']
+    Verify: typeof import('./components/verifition/Verify.vue')['default']
+    VerifyPoints: typeof import('./components/verifition/Verify/VerifyPoints.vue')['default']
+    VerifySlide: typeof import('./components/verifition/Verify/VerifySlide.vue')['default']
   }
 }

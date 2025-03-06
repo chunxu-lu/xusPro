@@ -7,7 +7,3 @@ export function doLogin(params: Record<string, any>): Promise<Record<string, any
 export function getUserInfo(): Promise<Record<string, any>> {
   return request('/auth/user-info', {}, 'get')
 }
-
-export function getCaptcha(): Promise<Record<string, any>> {
-  return request('/captcha/slider', {}, 'get')
-}

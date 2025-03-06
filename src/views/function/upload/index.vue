@@ -118,11 +118,14 @@ const handleSubmit = async () => {
 }
 
 .upload-section {
+  width: 100%;
   margin: 20px 0;
   padding: 20px;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 8px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .upload-container {
@@ -132,8 +135,6 @@ const handleSubmit = async () => {
 .progress {
   width: 100%;
   height: 20px;
-  background: #e0e0e0;
-  border-radius: 10px;
   overflow: hidden;
   margin: 10px 0;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);

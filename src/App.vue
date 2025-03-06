@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import WeatherCanvas from '@/components/WeatherCanvas.vue'
 </script>
 
 <template>
   <div class="app-container">
-    <WeatherCanvas class="background-canvas" />
     <div class="content-container">
       <router-view></router-view>
     </div>
