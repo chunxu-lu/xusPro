@@ -6,14 +6,14 @@
     <Verify
       @success="handleCaptchaSuccess"
       @fail="handleCaptchaFail"
-      :mode="'pop'"
+      mode="pop"
       :captchaType="'blockPuzzle'"
       :imgSize="{ width: '330px', height: '155px' }"
       ref="verify"
-    ></Verify>
+    />
 
     <div class="login-wrap" :class="{ 'dark-theme': useThemeStore().theme }">
-      <h2 class="login-title">登录</h2>
+      <h2 class="login-title">登 录</h2>
       <el-form ref="ruleFormRef" :model="ruleForm" size="large" class="login-form">
         <Motion :delay="100">
           <el-form-item label="用户名" prop="username" label-position="top">
@@ -27,8 +27,8 @@
           </el-form-item>
         </Motion>
       </el-form>
-      <el-button class="capatch-btn" type="primary" plain @click="useVerify">调用验证组件</el-button>
-      <el-button class="login-btn" type="primary" @click="login"> 登录 </el-button>
+      <el-button class="capatch-btn" type="primary" plain @click="useVerify">点 击 验 证</el-button>
+      <el-button class="login-btn" type="primary" @click="login"> 登 录 </el-button>
     </div>
   </div>
 </template>
@@ -54,13 +54,6 @@ const ruleForm = reactive({
   username: 'user',
   password: 'password'
 })
-
-watch(
-  () => useThemeStore().theme,
-  () => {
-    useThemeStore().toggleTheme()
-  }
-)
 
 const handleCaptchaSuccess = () => {
   ElMessage.success('验证码通过')

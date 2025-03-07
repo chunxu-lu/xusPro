@@ -11,3 +11,7 @@ export function uploadImage(file: any, imgName: string, flag: number): Promise<R
 export function getImages(): Promise<string[]> {
   return request('/getImages', {}, 'get')
 }
+
+export function deleteImages(params: any): Promise<string[]> {
+  return request('/deleteImage', params, 'post')
+}

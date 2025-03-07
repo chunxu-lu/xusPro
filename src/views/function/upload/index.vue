@@ -1,7 +1,18 @@
 <template>
   <!-- 修改上传组件 -->
   <div class="upload-section">
-    <el-image v-for="url in images" style="width: 100px; height: 100px" :src="url" />
+    <div class="images">
+      <div class="image" v-for="img in images">
+        <div class="close" @click="deleteImg(img.id)">×</div>
+        <el-image
+          style="width: 100px; height: 100px"
+          :src="img.imgUrl"
+          :preview-src-list="images.map(img => img.imgUrl)"
+        />
+        <div style="text-align: center">{{ img.imgName }}</div>
+      </div>
+    </div>
+
     <el-form @submit.prevent="handleSubmit">
       <el-form-item label="图片名称">
         <el-input v-model="imgName" placeholder="图片名称"></el-input>
@@ -14,6 +25,7 @@
       </el-form-item>
       <el-form-item label="上传图片">
         <el-upload
+          ref="uploadRef"
           class="upload-demo"
           :on-change="handleFileChange"
           :before-upload="beforeUpload"
@@ -38,12 +50,15 @@
 </template>
 
 <script lang="ts" setup>
-import { uploadImage, getImages } from '@/api/upload'
+import { uploadImage, getImages, deleteImages } from '@/api/upload'
 import { ElMessage } from 'element-plus'
 import { ref, onMounted } from 'vue'
 import type { UploadFile, UploadRawFile } from 'element-plus'
 
-const images = ref<string[]>([])
+const images = ref<any[]>([])
+
+// 获取 el-upload 的实例
+const uploadRef = ref()
 
 // 将异步函数改写为具名函数并在 onMounted 中调用
 const fetchImages = async () => {
@@ -53,9 +68,6 @@ const fetchImages = async () => {
 onMounted(() => {
   fetchImages()
 })
-
-const title = import.meta.env.VITE_APP_TITLE
-const data = ref({})
 
 const imgName = ref('')
 const flag = ref(1)
@@ -101,31 +113,65 @@ const handleSubmit = async () => {
 
   try {
     await uploadImage(selectedFile.value, imgName.value, flag.value)
-    ElMessage.success('表单提交成功')
+    ElMessage.success('上传成功')
     status.value = '上传成功！'
     progress.value = 100
+    // 刷新图片列表
+    fetchImages()
+
+    // 清空上传表单和进度条
+    uploadRef.value!.clearFiles()
+    imgName.value = ''
+    flag.value = 1
+    selectedFile.value = null // 确保选中的文件被清空
+    progress.value = 0
+    status.value = ''
   } catch (error: any) {
-    ElMessage.error('表单提交失败')
+    ElMessage.error('上传失败')
     status.value = '上传失败：' + error.message
     progress.value = 0
   }
 }
+
+async function deleteImg(id: number) {
+  await deleteImages({ id })
+  ElMessage.success('删除成功')
+  fetchImages()
+}
 </script>
 
 <style lang="scss" scoped>
-.weather-container {
-  padding: 20px;
-}
-
 .upload-section {
+  box-sizing: border-box;
   width: 100%;
-  margin: 20px 0;
   padding: 20px;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   max-width: 100%;
-  overflow: hidden;
+
+  .images {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+
+    .image {
+      position: relative;
+      margin-right: 6px;
+
+      .close {
+        cursor: pointer;
+        text-align: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.2);
+        font-size: 20px;
+        color: #fff;
+        top: 2px;
+        right: 2px;
+        position: absolute;
+        z-index: 10;
+      }
+    }
+  }
 }
 
 .upload-container {

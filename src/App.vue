@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="app-container">
@@ -14,25 +13,20 @@
 @import './style/dark.scss';
 
 .app-container {
+  box-sizing: border-box;
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
 }
 
-.background-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
 .content-container {
+  box-sizing: border-box;
   position: relative;
   width: 100%;
   height: 100%;
-  z-index: 1;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: hidden;
 }
 </style>

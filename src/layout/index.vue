@@ -1,46 +1,57 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-header class="header">
-        <div class="header-left">
-          <el-radio-group v-model="isCollapse">
-            <el-radio-button :value="false">expand</el-radio-button>
-            <el-radio-button :value="true">collapse</el-radio-button>
-          </el-radio-group>
-          <div class="system-name">vite&springboot</div>
-        </div>
-        <div class="header-right">
-          <el-dropdown>
-            <span class="user-dropdown">
-              <el-icon class="user-icon"><User /></el-icon>
-              admin
-              <el-icon><CaretBottom /></el-icon>
-            </span>
-            <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item>个人信息</el-dropdown-item>
-                <el-dropdown-item>修改密码</el-dropdown-item>
-                <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
-              </el-dropdown-menu>
-            </template>
-          </el-dropdown>
-        </div>
-      </el-header>
-      <el-container>
-        <el-aside :class="isCollapse ? 'collapse-side' : 'expand-side'">
-          <el-menu
-            default-active="2"
-            class="el-menu-vertical-demo"
-            :collapse="isCollapse"
-            @open="handleOpen"
-            @close="handleClose"
-          >
+      <div v-if="isMobile" class="mobile-drawer">
+        <el-drawer size="200px" v-model="drawer" direction="ltr">
+          <el-menu default-active="1" class="menus" :collapse="false">
             <template v-for="item in menuItems" :key="item.index">
               <menu-item :item="item" />
-            </template> </el-menu
-        ></el-aside>
-        <el-main>
-          <router-view></router-view>
+            </template>
+          </el-menu>
+        </el-drawer>
+      </div>
+      <el-aside v-else :class="isCollapse ? 'collapse-side' : 'expand-side'">
+        <el-menu default-active="1" class="menus" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
+          <template v-for="item in menuItems" :key="item.index">
+            <menu-item :item="item" />
+          </template> </el-menu
+      ></el-aside>
+      <el-container>
+        <el-header class="header">
+          <div class="header-left">
+            <div class="header-icon" @click="collapseClick">
+              <el-icon v-if="isCollapse"><Expand /></el-icon>
+              <el-icon v-else><Fold /></el-icon>
+            </div>
+            <div class="system-name">vite&spring</div>
+          </div>
+          <div class="header-right">
+            <el-switch v-model="useThemeStore().theme" class="switch" />
+            <el-dropdown>
+              <span class="user-dropdown">
+                <el-icon class="user-icon"><User /></el-icon>
+                admin
+                <el-icon><CaretBottom /></el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item>个人信息</el-dropdown-item>
+                  <el-dropdown-item>修改密码</el-dropdown-item>
+                  <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </div>
+        </el-header>
+        <el-main
+          :class="[
+            useThemeStore().theme ? 'main-section-dark' : 'main-section-light',
+            isMobile ? 'main-section-mobile' : 'main-section'
+          ]"
+        >
+          <el-scrollbar height="100%">
+            <router-view></router-view>
+          </el-scrollbar>
         </el-main>
       </el-container>
     </el-container>
@@ -50,17 +61,26 @@
 <script setup lang="ts">
 import MenuItem from '@/components/menu/MenuItem.vue' // 引入递归组件
 import { User, CaretBottom, House, Tools } from '@element-plus/icons-vue'
-import { useThemeStore } from '@/pinia'
 import { useRouter } from 'vue-router'
+import { useWindowSize } from '@vueuse/core'
+import { useThemeStore } from '@/pinia/modules/theme'
 
 const router = useRouter()
 
-watch(
-  () => useThemeStore().theme,
-  () => {
-    useThemeStore().toggleTheme()
+const drawer = ref(false)
+
+const isMobile = computed(() => useWindowSize().width.value < 768)
+
+const isCollapse = ref(false)
+
+// 监听窗口宽度变化，调整设备类型和侧边栏状态
+watchEffect(() => {
+  if (isMobile.value) {
+    isCollapse.value = true
+  } else {
+    isCollapse.value = false
   }
-)
+})
 
 const menuItems = [
   {
@@ -76,6 +96,7 @@ const menuItems = [
     icon: Tools,
     children: [
       {
+        index: '3',
         title: '上传图片',
         groupTitle: true,
         path: '/function/upload'
@@ -84,12 +105,20 @@ const menuItems = [
   }
 ]
 
-const isCollapse = ref(false)
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
 }
+
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)
+}
+
+function collapseClick() {
+  if (!isMobile.value) {
+    isCollapse.value = !isCollapse.value
+  } else {
+    drawer.value = !drawer.value
+  }
 }
 
 const handleLogout = () => {
@@ -99,6 +128,34 @@ const handleLogout = () => {
 </script>
 
 <style lang="scss" scoped>
+.common-layout {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.main-section {
+  width: calc(100vw - 230px);
+  height: calc(100vh - 100px);
+  overflow: hidden;
+  border-radius: 8px;
+  margin: 20px;
+}
+.main-section-mobile {
+  width: calc(100vw - 20px);
+  height: calc(100vh - 80px);
+  overflow: hidden;
+  border-radius: 8px;
+  margin: 10px;
+}
+.main-section-light {
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.main-section-dark {
+  box-shadow:
+    0 12px 24px rgba(0, 123, 255, 0.5),
+    0 0 20px rgba(0, 123, 255, 0.3);
+}
 .header {
   display: flex;
   align-items: center;
@@ -110,6 +167,11 @@ const handleLogout = () => {
   .header-left {
     display: flex;
     align-items: center;
+    .header-icon {
+      cursor: pointer;
+      margin-right: 20px;
+      font-size: 2em;
+    }
     .system-name {
       font-size: 18px;
       font-weight: bold;
@@ -118,6 +180,13 @@ const handleLogout = () => {
   }
 
   .header-right {
+    display: flex;
+    align-items: center;
+
+    .switch {
+      margin-right: 10px;
+    }
+
     .user-dropdown {
       display: flex;
       align-items: center;
@@ -138,24 +207,20 @@ const handleLogout = () => {
   }
 }
 
-.el-menu-vertical-demo:not(.el-menu--collapse) {
+.menus:not(.el-menu--collapse) {
   width: 200px;
-  min-height: 400px;
+  height: 100%;
 }
 
 .expand-side {
   width: 200px;
 }
 .collapse-side {
-  width: 100px;
+  width: 70px;
 }
-@media (max-width: 768px) {
-  .expand-side {
-    position: absolute;
-    z-index: 1;
-  }
-  .collapse-side {
-    width: 0;
+.mobile-drawer {
+  :deep(.el-drawer__body) {
+    padding: 0;
   }
 }
 </style>
