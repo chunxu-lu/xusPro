@@ -13,7 +13,11 @@
     />
 
     <div class="login-wrap" :class="{ 'dark-theme': useThemeStore().theme }">
-      <h2 class="login-title">登 录</h2>
+      <div style="display: flex; align-items: center; height: 100px">
+        <img src="./vite.svg" alt="logo" />
+        <h2 class="login-title">登 录</h2>
+      </div>
+
       <el-form ref="ruleFormRef" :model="ruleForm" size="large" class="login-form">
         <Motion :delay="100">
           <el-form-item label="用户名" prop="username" label-position="top">
@@ -126,9 +130,9 @@ async function login() {
   }
 
   .login-title {
+    margin-left: 10px;
     text-align: center;
-    font-size: 24px;
-    margin-bottom: 20px;
+    font-size: 20px;
     color: var(--text-color);
   }
 

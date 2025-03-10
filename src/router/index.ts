@@ -22,8 +22,13 @@ const routes = [
         children: [
           {
             path: '/function/upload',
-            name: 'upload',
+            name: 'Upload',
             component: () => import('@/views/function/upload/index.vue')
+          },
+          {
+            path: '/function/front-export',
+            name: 'FrontExport',
+            component: () => import('@/views/function/FrontExport/index.vue')
           },
         ]
       },

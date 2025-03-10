@@ -1,19 +1,34 @@
 <template>
-  <!-- 修改上传组件 -->
+  <!-- 上传组件 -->
   <div class="upload-section">
     <div class="images">
       <div class="image" v-for="img in images">
         <div class="close" @click="deleteImg(img.id)">×</div>
-        <el-image
-          style="width: 100px; height: 100px"
-          :src="img.imgUrl"
-          :preview-src-list="images.map(img => img.imgUrl)"
-        />
-        <div style="text-align: center">{{ img.imgName }}</div>
+        <div>
+          <el-image
+            style="width: 160px; height: 160px"
+            :src="img.imgUrl"
+            :preview-src-list="images.map(img => img.imgUrl)"
+            fit="contain"
+          />
+        </div>
+        <div
+          style="
+            text-align: center;
+            font-family: KaiTi;
+            overflow: hidden;
+            max-width: 160px;
+            text-overflow: ellipsis;
+            margin-top: 6px;
+            white-space: nowrap;
+          "
+        >
+          {{ img.imgName }}
+        </div>
       </div>
     </div>
 
-    <el-form @submit.prevent="handleSubmit">
+    <el-form style="max-width: 360px" @submit.prevent="handleSubmit">
       <el-form-item label="图片名称">
         <el-input v-model="imgName" placeholder="图片名称"></el-input>
       </el-form-item>
@@ -32,14 +47,19 @@
           list-type="picture"
           :auto-upload="false"
         >
-          <el-button type="primary">点击上传图片</el-button>
+          <el-button type="primary" size="small">点击上传图片</el-button>
           <template #tip>
             <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 5MB</div>
           </template>
         </el-upload>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="handleSubmit">提交</el-button>
+        <el-button
+          type="primary"
+          @click="handleSubmit"
+          style="width: 200px;margin-left: 66px;"
+          >提交</el-button
+        >
       </el-form-item>
     </el-form>
     <div class="progress">
@@ -150,7 +170,7 @@ async function deleteImg(id: number) {
   .images {
     display: flex;
     flex-wrap: wrap;
-    margin-bottom: 10px;
+    margin-bottom: 30px;
 
     .image {
       position: relative;

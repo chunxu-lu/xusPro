@@ -2,7 +2,13 @@
   <div class="common-layout">
     <el-container>
       <div v-if="isMobile" class="mobile-drawer">
-        <el-drawer size="200px" v-model="drawer" direction="ltr">
+        <el-drawer size="200px" v-model="drawer" direction="ltr" :show-close="false">
+          <template #header>
+            <div style="display: flex; align-items: center">
+              <img src="./vite.svg" alt="logo" />
+              <div>vite&spring</div>
+            </div>
+          </template>
           <el-menu default-active="1" class="menus" :collapse="false">
             <template v-for="item in menuItems" :key="item.index">
               <menu-item :item="item" />
@@ -23,7 +29,10 @@
               <el-icon v-if="isCollapse"><Expand /></el-icon>
               <el-icon v-else><Fold /></el-icon>
             </div>
-            <div class="system-name">vite&spring</div>
+            <div class="system-name">
+              <img src="./vite.svg" alt="logo" />
+              <div>vite&spring</div>
+            </div>
           </div>
           <div class="header-right">
             <el-switch v-model="useThemeStore().theme" class="switch" />
@@ -100,6 +109,12 @@ const menuItems = [
         title: '上传图片',
         groupTitle: true,
         path: '/function/upload'
+      },
+      {
+        index: '4',
+        title: '前端导出表格',
+        groupTitle: true,
+        path: '/function/front-export'
       }
     ]
   }
@@ -173,7 +188,9 @@ const handleLogout = () => {
       font-size: 2em;
     }
     .system-name {
-      font-size: 18px;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
       font-weight: bold;
       color: var(--el-text-color-primary);
     }
@@ -204,6 +221,12 @@ const handleLogout = () => {
 .el-dropdown-menu {
   .el-dropdown-item {
     padding: 8px 20px;
+  }
+}
+
+.mobile-drawer {
+  .el-menu {
+    border-right: none;
   }
 }
 
