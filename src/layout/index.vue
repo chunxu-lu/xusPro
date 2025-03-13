@@ -9,12 +9,7 @@
               <div>vite&spring</div>
             </div>
           </template>
-          <el-menu
-            @select="selectMenu"
-            :default-active="useRouterStoreHook().activeIndex"
-            class="menus"
-            :collapse="false"
-          >
+          <el-menu @select="selectMenu" :default-active="useRouterStore().activeIndex" class="menus" :collapse="false">
             <template v-for="item in menuItems" :key="item.index">
               <menu-item :item="item" />
             </template>
@@ -24,11 +19,9 @@
       <el-aside v-else :class="isCollapse ? 'collapse-side' : 'expand-side'">
         <el-menu
           @select="selectMenu"
-          :default-active="useRouterStoreHook().activeIndex"
+          :default-active="useRouterStore().activeIndex"
           class="menus"
           :collapse="isCollapse"
-          @open="handleOpen"
-          @close="handleClose"
         >
           <template v-for="item in menuItems" :key="item.index">
             <menu-item :item="item" />
@@ -85,7 +78,8 @@ import { User, CaretBottom, House, Tools } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { useWindowSize } from '@vueuse/core'
 import { useThemeStore } from '@/pinia/modules/theme'
-import { useRouterStoreHook } from '@/pinia/modules/router'
+import { useRouterStore } from '@/pinia/modules/router'
+import { useAppStoreHook } from '@/pinia/modules/app'
 
 const router = useRouter()
 
@@ -99,13 +93,15 @@ const isCollapse = ref(false)
 watchEffect(() => {
   if (isMobile.value) {
     isCollapse.value = true
+    useAppStoreHook().toggleDevice('mobile')
   } else {
     isCollapse.value = false
+    useAppStoreHook().toggleDevice('desktop')
   }
 })
 
 function selectMenu(index: string) {
-  useRouterStoreHook().setActiveIndex(index)
+  useRouterStore().activeIndex = index
 }
 
 const menuItems = [
@@ -123,12 +119,18 @@ const menuItems = [
     children: [
       {
         index: '3',
+        title: '瀑布流',
+        groupTitle: true,
+        path: '/function/water-fall'
+      },
+      {
+        index: '4',
         title: '上传图片',
         groupTitle: true,
         path: '/function/upload'
       },
       {
-        index: '4',
+        index: '5',
         title: '前端导出表格',
         groupTitle: true,
         path: '/function/front-export'
@@ -136,14 +138,6 @@ const menuItems = [
     ]
   }
 ]
-
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
-
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath)
-}
 
 function collapseClick() {
   if (!isMobile.value) {

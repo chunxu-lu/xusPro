@@ -21,6 +21,11 @@ const routes = [
         name: 'function',
         children: [
           {
+            path: '/function/water-fall',
+            name: 'WaterFall',
+            component: () => import('@/views/function/WaterFall/index.vue')
+          },
+          {
             path: '/function/upload',
             name: 'Upload',
             component: () => import('@/views/function/upload/index.vue')
@@ -29,9 +34,9 @@ const routes = [
             path: '/function/front-export',
             name: 'FrontExport',
             component: () => import('@/views/function/FrontExport/index.vue')
-          },
+          }
         ]
-      },
+      }
     ]
   },
   {

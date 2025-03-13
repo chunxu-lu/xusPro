@@ -1,4 +1,3 @@
-import pinia from '@/pinia'
 import { useStorage } from '@vueuse/core'
 
 export const useRouterStore = defineStore('app', () => {
@@ -16,6 +15,4 @@ export const useRouterStore = defineStore('app', () => {
   }
 })
 
-export function useRouterStoreHook() {
-  return useRouterStore(pinia)
-}
+export default useRouterStore

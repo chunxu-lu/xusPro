@@ -1,7 +1,8 @@
 import { createPinia } from 'pinia'
-import useThemeStore from "./modules/theme"
+import useThemeStore from './modules/theme'
+import useRouterStore from './modules/router'
 
 const pinia = createPinia()
 
-export { useThemeStore }
+export { useThemeStore, useRouterStore }
 export default pinia

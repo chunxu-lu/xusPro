@@ -46,14 +46,25 @@ instance.interceptors.response.use(
 )
 
 // 封装 GET POST 请求并导出
-export function request<T = any>(url = '', params = {}, type = 'POST'): Promise<T> {
+export function request<T = any>(url = '', params = {}, type = 'POST', onUploadProgress = null): Promise<T> {
   return new Promise((resolve, reject) => {
-    let promise: Promise<any>
+    let promise
 
     if (type.toUpperCase() === 'GET') {
       promise = instance.get(url, { params })
     } else if (type.toUpperCase() === 'POST') {
-      promise = instance.post(url, params)
+      const config = {
+        onUploadProgress: onUploadProgress
+          ? progressEvent => {
+              // 计算进度百分比
+              if (progressEvent.lengthComputable) {
+                const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                onUploadProgress(percentCompleted) // 调用传入的回调函数
+              }
+            }
+          : undefined
+      }
+      promise = instance.post(url, params, config)
     } else {
       promise = Promise.reject(new Error('不支持的请求类型'))
     }
