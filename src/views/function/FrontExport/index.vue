@@ -1,53 +1,58 @@
 <template>
-  <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="date" label="Date" width="180" />
-    <el-table-column prop="name" label="Name" width="180" />
-    <el-table-column prop="address" label="Address" />
+  <el-table :data="tableData" stripe border style="min-width: 100%" :row-style="rowStyle">
+    <el-table-column align="center" label="网站用户信息表">
+      <el-table-column>
+        <el-table-column align="center" type="index" label="序号" width="80" />
+      </el-table-column>
+      <el-table-column>
+        <el-table-column align="center" prop="id" label="用户id" width="180" />
+      </el-table-column>
+      <el-table-column>
+        <el-table-column align="center" prop="userName" label="用户名" width="180" />
+      </el-table-column>
+      <el-table-column>
+        <el-table-column align="center" prop="nickName" label="昵称" width="180" />
+      </el-table-column>
+      <el-table-column align="center" label="个人信息">
+        <el-table-column align="center" prop="name" label="姓名" width="180" />
+        <el-table-column align="center" prop="age" label="年龄" width="180" />
+        <el-table-column align="center" prop="mobile" label="手机号" width="180" />
+        <el-table-column align="center" prop="email" label="邮箱" width="180" />
+        <el-table-column align="center" prop="cardNumber" label="身份证号" width="180" />
+      </el-table-column>
+      <el-table-column>
+        <el-table-column align="center" prop="registrationTime" label="注册时间" width="300" />
+      </el-table-column>
+    </el-table-column>
   </el-table>
-  <el-button type="primary" @click="exportExcel" style="margin-top: 10px">前端导出excel</el-button>
+  <el-button type="primary" @click="exportExcel" style="margin-top: 10px">前端导出表格</el-button>
 </template>
 
 <script lang="ts" setup>
 import { utilXlsxExportFile } from './xlsx'
+import { getUserList } from '@/api/user'
 
-const tableData = [
-  {
-    date: '2016-05-03',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-02',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-04',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  },
-  {
-    date: '2016-05-01',
-    name: 'Tom',
-    address: 'No. 189, Grove St, Los Angeles'
-  }
-]
+const tableData = ref([])
+
+onMounted(async () => {
+  const res = await getUserList()
+  tableData.value = res.data
+})
+
+function rowStyle() {
+  return { height: '50px' } // 设置行高为50px
+}
 
 const mergedCells = [
   {
-    name: '_______区家庭医生管费用不合理医疗行为线索上报汇总表',
+    name: '网站用户信息表',
     children: [
       {
         name: '',
         children: [
           {
-            prop: 'xh',
-            name: '序号',
-            children: [
-              {
-                name: '范例'
-              }
-            ]
+            key: 'index',
+            name: '序号'
           }
         ]
       },
@@ -55,13 +60,8 @@ const mergedCells = [
         name: '',
         children: [
           {
-            name: '区代码',
-            prop: 'qdm',
-            children: [
-              {
-                name: ''
-              }
-            ]
+            name: '用户id',
+            key: 'id'
           }
         ]
       },
@@ -69,13 +69,8 @@ const mergedCells = [
         name: '',
         children: [
           {
-            name: '区名称',
-            prop: 'qmc',
-            children: [
-              {
-                name: ''
-              }
-            ]
+            name: '用户名',
+            key: 'userName'
           }
         ]
       },
@@ -83,45 +78,33 @@ const mergedCells = [
         name: '',
         children: [
           {
-            name: '社区代码（22位）',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
+            name: '昵称',
+            key: 'nickName'
           }
         ]
       },
       {
-        name: '报送家庭医生',
+        name: '个人信息',
         children: [
-          {
-            name: '所在社区名称（第一名称）',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
           {
             name: '姓名',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
+            key: 'name'
+          },
+          {
+            name: '年龄',
+            key: 'age'
+          },
+          {
+            name: '手机号',
+            key: 'mobile'
+          },
+          {
+            name: '邮箱',
+            key: 'email'
           },
           {
             name: '身份证号',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
+            key: 'cardNumber'
           }
         ]
       },
@@ -129,190 +112,8 @@ const mergedCells = [
         name: '',
         children: [
           {
-            name: '报送时间',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: '居民信息',
-        children: [
-          {
-            name: '签约居民',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '医保卡号',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '身份证号',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '签约一级机构',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '签约二级机构',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '签约三级机构',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: '家庭医生反馈信息',
-        children: [
-          {
-            name: '存在问题（客观数据）',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '报送原因（判断分析）',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '异常线索类型',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: '诊疗明细',
-        children: [
-          {
-            name: '序',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '就诊时间',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '就诊机构',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '就诊科室',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '诊断',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '就诊号',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '合计（元）',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '药费（元）',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
-          },
-          {
-            name: '其他费用（元）',
-            prop: 'baseValue0',
-            children: [
-              {
-                name: ''
-              }
-            ]
+            name: '注册时间',
+            key: 'registrationTime'
           }
         ]
       }
@@ -321,7 +122,7 @@ const mergedCells = [
 ]
 
 function exportExcel() {
-  utilXlsxExportFile([], '前端导出excel', '前端导出excel', mergedCells)
+  utilXlsxExportFile(tableData.value, '网站用户信息表', '网站用户信息表', mergedCells)
 }
 </script>
 

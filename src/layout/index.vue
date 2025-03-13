@@ -9,7 +9,12 @@
               <div>vite&spring</div>
             </div>
           </template>
-          <el-menu default-active="1" class="menus" :collapse="false">
+          <el-menu
+            @select="selectMenu"
+            :default-active="useRouterStoreHook().activeIndex"
+            class="menus"
+            :collapse="false"
+          >
             <template v-for="item in menuItems" :key="item.index">
               <menu-item :item="item" />
             </template>
@@ -17,7 +22,14 @@
         </el-drawer>
       </div>
       <el-aside v-else :class="isCollapse ? 'collapse-side' : 'expand-side'">
-        <el-menu default-active="1" class="menus" :collapse="isCollapse" @open="handleOpen" @close="handleClose">
+        <el-menu
+          @select="selectMenu"
+          :default-active="useRouterStoreHook().activeIndex"
+          class="menus"
+          :collapse="isCollapse"
+          @open="handleOpen"
+          @close="handleClose"
+        >
           <template v-for="item in menuItems" :key="item.index">
             <menu-item :item="item" />
           </template> </el-menu
@@ -73,6 +85,7 @@ import { User, CaretBottom, House, Tools } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import { useWindowSize } from '@vueuse/core'
 import { useThemeStore } from '@/pinia/modules/theme'
+import { useRouterStoreHook } from '@/pinia/modules/router'
 
 const router = useRouter()
 
@@ -90,6 +103,10 @@ watchEffect(() => {
     isCollapse.value = false
   }
 })
+
+function selectMenu(index: string) {
+  useRouterStoreHook().setActiveIndex(index)
+}
 
 const menuItems = [
   {
