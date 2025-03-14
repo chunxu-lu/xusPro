@@ -45,6 +45,7 @@ import { User, Lock } from '@element-plus/icons-vue'
 import Verify from '@/components/verifition/Verify.vue'
 import { ref, reactive, watch } from 'vue'
 import { ElMessage } from 'element-plus'
+import useUserStore from '@/pinia/modules/user'
 
 const verify = ref()
 
@@ -55,8 +56,8 @@ function useVerify() {
 }
 
 const ruleForm = reactive({
-  username: 'user',
-  password: 'password'
+  username: 'zhaolei',
+  password: 'zhaolei'
 })
 
 const handleCaptchaSuccess = () => {
@@ -74,8 +75,9 @@ async function login() {
     return
   }
   const res = await doLogin(ruleForm)
-  sessionStorage.setItem('token', res.jwtToken)
-  await getUserInfo()
+  sessionStorage.setItem('token', res.data.jwtToken)
+  const res2 = await getUserInfo()
+  useUserStore().userInfo = res2.data
   router.push('/home')
 }
 </script>

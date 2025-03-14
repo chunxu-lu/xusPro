@@ -27,7 +27,7 @@ const images = ref<any[]>([])
 
 // 将异步函数改写为具名函数并在 onMounted 中调用
 const fetchImages = async () => {
-  images.value = (await getImages()).map(item => {
+  images.value = (await getImages()).data.map(item => {
     return {
       ...item,
       src: item.imgUrl

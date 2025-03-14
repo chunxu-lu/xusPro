@@ -34,6 +34,11 @@ const routes = [
             path: '/function/front-export',
             name: 'FrontExport',
             component: () => import('@/views/function/FrontExport/index.vue')
+          },
+          {
+            path: '/function/drag',
+            name: 'Drag',
+            component: () => import('@/views/function/Drag/index.vue')
           }
         ]
       }

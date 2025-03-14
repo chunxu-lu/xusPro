@@ -59,7 +59,7 @@ export default defineConfig({
     proxy: {
       // 选项写法
       '/api': {
-        target: 'http://192.168.1.33:8080/api',
+        target: 'http://192.168.1.132:8080/api',
         changeOrigin: true,
         rewrite: path => path.replace(new RegExp(`^/api`), ''),
         secure: false // 如果是 HTTPS 目标，则设为 true

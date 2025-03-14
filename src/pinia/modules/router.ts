@@ -1,6 +1,6 @@
 import { useStorage } from '@vueuse/core'
 
-export const useRouterStore = defineStore('app', () => {
+export const useRouterStore = defineStore('router', () => {
   // 布局大小
   const activeIndex = useStorage('activeIndex', '1')
 

@@ -30,17 +30,24 @@ instance.interceptors.request.use(
 // http response 拦截器
 instance.interceptors.response.use(
   response => {
-    return response.data // 直接返回响应数据
+    const res = response.data // 直接返回响应数据
+    if (res.code !== 200) {
+      ElMessage.error(res.msg)
+      return res.msg || 'Error'
+    } else {
+      return res
+    }
   },
   error => {
     const { response } = error
     if (response) {
       // 请求已发出，但是不在2xx的范围
       showMessage(response.status) // 传入响应码，匹配响应码对应信息
-      return Promise.reject(response.data)
+      ElMessage.error(response.data.msg || '请求失败')
+      return response.data
     } else {
       ElMessage.warning('网络连接异常,请稍后再试!')
-      return Promise.reject(error)
+      return error
     }
   }
 )

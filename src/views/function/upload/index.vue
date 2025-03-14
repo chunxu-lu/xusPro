@@ -51,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-import { uploadImage, getImages } from '@/api/upload'
+import { uploadImage } from '@/api/upload'
 import { ElMessage } from 'element-plus'
 import { ref, onMounted } from 'vue'
 import type { UploadFile, UploadRawFile } from 'element-plus'

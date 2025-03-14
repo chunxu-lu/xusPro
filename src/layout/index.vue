@@ -9,7 +9,13 @@
               <div>vite&spring</div>
             </div>
           </template>
-          <el-menu @select="selectMenu" :default-active="useRouterStore().activeIndex" class="menus" :collapse="false">
+          <el-menu
+            :default-openeds="['2']"
+            @select="selectMenu"
+            :default-active="useRouterStore().activeIndex"
+            class="menus"
+            :collapse="false"
+          >
             <template v-for="item in menuItems" :key="item.index">
               <menu-item :item="item" />
             </template>
@@ -22,6 +28,7 @@
           :default-active="useRouterStore().activeIndex"
           class="menus"
           :collapse="isCollapse"
+          :default-openeds="['2']"
         >
           <template v-for="item in menuItems" :key="item.index">
             <menu-item :item="item" />
@@ -44,7 +51,7 @@
             <el-dropdown>
               <span class="user-dropdown">
                 <el-icon class="user-icon"><User /></el-icon>
-                admin
+                {{ useUserStore().userInfo?.username }}
                 <el-icon><CaretBottom /></el-icon>
               </span>
               <template #dropdown>
@@ -79,7 +86,8 @@ import { useRouter } from 'vue-router'
 import { useWindowSize } from '@vueuse/core'
 import { useThemeStore } from '@/pinia/modules/theme'
 import { useRouterStore } from '@/pinia/modules/router'
-import { useAppStoreHook } from '@/pinia/modules/app'
+import { useAppStore } from '@/pinia/modules/app'
+import { useUserStore } from '@/pinia/modules/user'
 
 const router = useRouter()
 
@@ -93,10 +101,12 @@ const isCollapse = ref(false)
 watchEffect(() => {
   if (isMobile.value) {
     isCollapse.value = true
-    useAppStoreHook().toggleDevice('mobile')
+    // useAppStore().toggleDevice('mobile')
+    useAppStore().device = 'mobile'
   } else {
     isCollapse.value = false
-    useAppStoreHook().toggleDevice('desktop')
+    // useAppStore().toggleDevice('desktop')
+    useAppStore().device = 'desktop'
   }
 })
 
@@ -134,6 +144,12 @@ const menuItems = [
         title: '前端导出表格',
         groupTitle: true,
         path: '/function/front-export'
+      },
+      {
+        index: '6',
+        title: '拖拽',
+        groupTitle: true,
+        path: '/function/drag'
       }
     ]
   }
@@ -220,6 +236,7 @@ const handleLogout = () => {
       align-items: center;
       cursor: pointer;
       color: var(--el-text-color-primary);
+      outline: none;
 
       .user-icon {
         margin-right: 8px;

@@ -31,6 +31,4 @@ export const useAppStore = defineStore('app', () => {
   }
 })
 
-export function useAppStoreHook() {
-  return useAppStore(pinia)
-}
+export default useAppStore
