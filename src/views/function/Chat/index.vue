@@ -21,7 +21,11 @@ export default {
     const socket = ref(null)
 
     const connectWebSocket = () => {
-      socket.value = new WebSocket('ws://127.0.0.1:8080/chat')
+
+      // 线上
+      // socket.value = new WebSocket('wss://www.bytedancing.top/chat');
+      // 本地
+      socket.value = new WebSocket('ws://127.0.0.1:8080/chat');
 
       socket.value.onopen = () => {
         console.log('WebSocket connection established')
