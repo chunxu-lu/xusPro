@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useThemeStore } from '@/pinia/index'
+import { useRouterStore, useThemeStore } from '@/pinia/index'
 import { doLogin, getUserInfo } from '@/api/login'
 import router from '@/router'
 import { User, Lock } from '@element-plus/icons-vue'
@@ -79,6 +79,7 @@ async function login() {
   const res2 = await getUserInfo()
   useUserStore().userInfo = res2.data
   router.push('/home')
+  useRouterStore().activeIndex = '1'
 }
 </script>
 

@@ -6,7 +6,7 @@
           <template #header>
             <div style="display: flex; align-items: center">
               <img src="./vite.svg" alt="logo" />
-              <div>vite&spring</div>
+              <div>比特跳跃</div>
             </div>
           </template>
           <el-menu
@@ -43,7 +43,7 @@
             </div>
             <div class="system-name">
               <img src="./vite.svg" alt="logo" />
-              <div>vite&spring</div>
+              <div>比特跳跃</div>
             </div>
           </div>
           <div class="header-right">
@@ -70,7 +70,7 @@
             isMobile ? 'main-section-mobile' : 'main-section'
           ]"
         >
-          <el-scrollbar height="100%">
+          <el-scrollbar>
             <router-view></router-view>
           </el-scrollbar>
         </el-main>
@@ -150,6 +150,12 @@ const menuItems = [
         title: '拖拽',
         groupTitle: true,
         path: '/function/drag'
+      },
+      {
+        index: '7',
+        title: '聊天室',
+        groupTitle: true,
+        path: '/function/chat'
       }
     ]
   }

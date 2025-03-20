@@ -39,6 +39,11 @@ const routes = [
             path: '/function/drag',
             name: 'Drag',
             component: () => import('@/views/function/Drag/index.vue')
+          },
+          {
+            path: '/function/chat',
+            name: 'Drag',
+            component: () => import('@/views/function/Chat/index.vue')
           }
         ]
       }
