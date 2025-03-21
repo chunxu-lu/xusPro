@@ -42,7 +42,7 @@ const routes = [
           },
           {
             path: '/function/chat',
-            name: 'Drag',
+            name: 'Chat',
             component: () => import('@/views/function/Chat/index.vue')
           }
         ]

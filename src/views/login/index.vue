@@ -14,7 +14,7 @@
 
     <div class="login-wrap" :class="{ 'dark-theme': useThemeStore().theme }">
       <div style="display: flex; align-items: center; height: 100px">
-        <img src="./vite.svg" alt="logo" />
+        <img src="./logo.svg" alt="logo" style="width: 36px; height: 36px" />
         <h2 class="login-title">登 录</h2>
       </div>
 
@@ -135,7 +135,7 @@ async function login() {
   .login-title {
     margin-left: 10px;
     text-align: center;
-    font-size: 20px;
+    font-size: 18px;
     color: var(--text-color);
   }
 

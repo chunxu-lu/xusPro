@@ -275,4 +275,21 @@ html.dark {
       background: rgb(92 93 96);
     }
   }
+
+  /* 在线状态小圆点样式 */
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-left: 5px;
+  }
+
+  .online {
+    background-color: var(--el-color-success);
+  }
+
+  .offline {
+    background-color: var(--el-color-danger);
+  }
 }
