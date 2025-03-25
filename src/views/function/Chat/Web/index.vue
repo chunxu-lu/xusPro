@@ -55,11 +55,11 @@
         <ul class="message-list">
           <li v-for="(message, index) in messages2" :key="index" :style="{
             display: 'flex',
-            justifyContent: message.username === 'system' ? 'center' : (message.username === useUserStore().userInfo?.username ? 'end' : 'start')
+            justifyContent: message.username === 'system' ? 'center' : (message.username === 'qinshihuang' ? 'end' : 'start')
           }">
             <div class="message" :class="message.username === 'system' ? 'message-nobg' : ''" :style="{ 
-              backgroundColor: message.username === useUserStore().userInfo?.username ? '#409EFF' : '',
-              color: message.username === useUserStore().userInfo?.username ? '#FFFFFF' : '',
+              backgroundColor: message.username === 'qinshihuang' ? '#409EFF' : '',
+              color: message.username === 'qinshihuang' ? '#FFFFFF' : '',
               textAlign: 'left',
               maxWidth:'70%',
               border: message.username === 'system' ? 'none' : '',
@@ -70,7 +70,7 @@
               position: 'relative',
               display: 'inline-block',
             }">
-              {{ message.username === useUserStore().userInfo?.username ? '' : message.username + ': ' }}{{ message.message }}
+              {{ message.username === 'qinshihuang' ? '' : message.username + ': ' }}{{ message.message }}
             </div>
           </li>
         </ul>
