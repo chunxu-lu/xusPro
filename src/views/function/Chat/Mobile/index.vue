@@ -14,7 +14,26 @@
       </div>
       <el-card class="chat-container">
         <ul class="message-list">
-          <li v-for="(message, index) in messages" :key="index" class="message">{{ message }}</li>
+          <li v-for="(message, index) in messages" :key="index" :style="{
+            display: 'flex',
+            justifyContent: message.username === 'system' ? 'center' : (message.username === useUserStore().userInfo?.username ? 'end' : 'start')
+          }">
+            <div class="message" :class="message.username === 'system' ? 'message-nobg' : ''" :style="{ 
+              backgroundColor: message.username === useUserStore().userInfo?.username ? '#409EFF' : '',
+              color: message.username === useUserStore().userInfo?.username ? '#FFFFFF' : '',
+              textAlign: message.username === 'system' ? 'center' : 'left',
+              maxWidth: message.username === 'system' ? '100%' : '70%',
+              border: message.username === 'system' ? 'none' : '',
+              borderRadius: message.username === 'system' ? '0' : '10px',
+              padding: '10px',
+              margin: '5px 0',
+              wordWrap: 'break-word',
+              position: 'relative',
+              display: 'inline-block',
+            }">
+              {{ message.username === useUserStore().userInfo?.username ? '' : message.username + ': ' }}{{ message.message }}
+            </div>
+          </li>
         </ul>
         <div class="input-area">
           <el-input v-model="newMessage" @change="sendMessage" placeholder="Type a message..." class="message-input" />
@@ -24,7 +43,7 @@
     </div>
 
     <div>
-      <div style="display: flex; align-items: center; margin-bottom: 10px">
+      <div style="display: flex; align-items: center; margin-bottom: 10px;margin-top: 30px;">
         <div style="margin-right: 20px; font-size: 14px">
           用户：qinshihuang
           <span :class="['status-dot', isOnline2 ? 'online' : 'offline']"></span>
@@ -34,15 +53,30 @@
       </div>
       <el-card class="chat-container">
         <ul class="message-list">
-          <li v-for="(message, index) in messages2" :key="index" class="message">{{ message }}</li>
+          <li v-for="(message, index) in messages2" :key="index" :style="{
+            display: 'flex',
+            justifyContent: message.username === 'system' ? 'center' : (message.username === useUserStore().userInfo?.username ? 'end' : 'start')
+          }">
+            <div class="message" :class="message.username === 'system' ? 'message-nobg' : ''" :style="{ 
+              backgroundColor: message.username === useUserStore().userInfo?.username ? '#409EFF' : '',
+              color: message.username === useUserStore().userInfo?.username ? '#FFFFFF' : '',
+              textAlign: message.username === 'system' ? 'center' : 'left',
+              maxWidth: message.username === 'system' ? '100%' : '70%',
+              border: message.username === 'system' ? 'none' : '',
+              borderRadius: message.username === 'system' ? '0' : '10px',
+              padding: '10px',
+              margin: '5px 0',
+              wordWrap: 'break-word',
+              position: 'relative',
+              display: 'inline-block',
+            }">
+              {{ message.username === useUserStore().userInfo?.username ? '' : message.username + ': ' }}{{ message.message }}
+            </div>
+          </li>
         </ul>
         <div class="input-area">
-          <el-input
-            v-model="newMessage2"
-            @change="sendMessage2"
-            placeholder="Type a message..."
-            class="message-input"
-          />
+          <el-input v-model="newMessage2" @change="sendMessage2" placeholder="Type a message..."
+            class="message-input" />
           <el-button @click="sendMessage2" class="send-button">Send</el-button>
         </div>
       </el-card>
@@ -51,240 +85,235 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/pinia'
-import { ref, onBeforeUnmount } from 'vue'
-import { doLogin, clearChat } from '@/api/login'
-import { useAppStore } from '@/pinia/modules/app'
-// 读取环境变量
-const wsHost = import.meta.env.VITE_APP_HOST_WS
+  import { useUserStore } from '@/pinia'
+  import { ref, onBeforeUnmount } from 'vue'
+  import { doLogin, clearChat } from '@/api/login'
+  import { useAppStore } from '@/pinia/modules/app'
+  // 读取环境变量
+  const wsHost = import.meta.env.VITE_APP_HOST_WS
 
-const messages = ref([])
-const newMessage = ref('')
-const socket = ref(null)
-const isOnline = ref(false) // 添加在线状态
+  const messages = ref([])
+  const newMessage = ref('')
+  const socket = ref(null)
+  const isOnline = ref(false) // 添加在线状态
 
-const messages2 = ref([])
-const newMessage2 = ref('')
-const socket2 = ref(null)
-const isOnline2 = ref(false) // 添加在线状态
+  const messages2 = ref([])
+  const newMessage2 = ref('')
+  const socket2 = ref(null)
+  const isOnline2 = ref(false) // 添加在线状态
 
-//zhaolei
-const connectWebSocket1 = () => {
-  const token = sessionStorage.getItem('token')
+  //zhaolei
+  const connectWebSocket1 = () => {
+    const token = sessionStorage.getItem('token')
 
-  // 线上
-  // socket.value = new WebSocket('wss://www.bytedancing.top/chat');
-  // 本地
-  socket.value = new WebSocket(`${wsHost}/chat?jwt=${token}`)
+    // 线上
+    // socket.value = new WebSocket('wss://www.bytedancing.top/chat');
+    // 本地
+    socket.value = new WebSocket(`${wsHost}/chat?jwt=${token}`)
 
-  socket.value.onopen = () => {
-    ElMessage.success('WebSocket connection established')
-    isOnline.value = true
+    socket.value.onopen = () => {
+      ElMessage.success('WebSocket connection established')
+      isOnline.value = true
+    }
+
+    socket.value.onmessage = event => {
+      messages.value.push(JSON.parse(event.data))
+    }
+
+    socket.value.onclose = () => {
+      console.log('WebSocket connection closed')
+      isOnline.value = false
+    }
+
+    socket.value.onerror = error => {
+      console.error('WebSocket error:', error)
+    }
   }
 
-  socket.value.onmessage = event => {
-    messages.value.push(event.data)
-  }
-
-  socket.value.onclose = () => {
-    console.log('WebSocket connection closed')
-    isOnline.value = false
-  }
-
-  socket.value.onerror = error => {
-    console.error('WebSocket error:', error)
-  }
-}
-
-// qinshihuang
-const connectWebSocket2 = async () => {
-  if (!sessionStorage.getItem('user2token')) {
-    const res = await doLogin({
-      username: 'qinshihuang',
-      password: 'qinshihuang'
-    })
-    sessionStorage.setItem('user2token', res.data.jwtToken)
-  }
-
-  const user2token = sessionStorage.getItem('user2token')
-
-  // 线上
-  // socket.value = new WebSocket('wss://www.bytedancing.top/chat');
-  // 本地
-  socket2.value = new WebSocket(`${wsHost}/chat?jwt=${user2token}`)
-
-  socket2.value.onopen = () => {
-    ElMessage.success('WebSocket connection established')
-    isOnline2.value = true
-  }
-
-  socket2.value.onmessage = event => {
-    messages2.value.push(event.data)
-  }
-
-  socket2.value.onclose = () => {
-    console.log('WebSocket connection closed')
-    isOnline2.value = false
-  }
-
-  socket2.value.onerror = error => {
-    console.error('WebSocket error:', error)
-  }
-}
-
-const sendMessage = () => {
-  if (newMessage.value.trim() !== '') {
-    socket.value.send(
-      JSON.stringify({
-        user: useUserStore().userInfo?.username || 'You',
-        message: newMessage.value
+  // qinshihuang
+  const connectWebSocket2 = async () => {
+    if (!sessionStorage.getItem('user2token')) {
+      const res = await doLogin({
+        username: 'qinshihuang',
+        password: 'qinshihuang'
       })
-    )
-    newMessage.value = ''
-  }
-}
+      sessionStorage.setItem('user2token', res.data.jwtToken)
+    }
 
-const sendMessage2 = () => {
-  if (newMessage2.value.trim() !== '') {
-    socket2.value.send(
-      JSON.stringify({
-        user: 'qinshihuang',
-        message: newMessage2.value
-      })
-    )
-    newMessage2.value = ''
-  }
-}
+    const user2token = sessionStorage.getItem('user2token')
 
-const joinChat1 = () => {
-  if (!socket.value || socket.value.readyState === WebSocket.CLOSED) {
-    connectWebSocket1()
-  }
-}
+    // 线上
+    // socket.value = new WebSocket('wss://www.bytedancing.top/chat');
+    // 本地
+    socket2.value = new WebSocket(`${wsHost}/chat?jwt=${user2token}`)
 
-const joinChat2 = () => {
-  if (!socket2.value || socket2.value.readyState === WebSocket.CLOSED) {
-    connectWebSocket2()
-  }
-}
+    socket2.value.onopen = () => {
+      ElMessage.success('WebSocket connection established')
+      isOnline2.value = true
+    }
 
-function closeChat1() {
-  if (socket.value) {
-    socket.value.close()
-    ElMessage.success('WebSocket connection closed')
+    socket2.value.onmessage = event => {
+      messages2.value.push(JSON.parse(event.data))
+    }
+
+    socket2.value.onclose = () => {
+      console.log('WebSocket connection closed')
+      isOnline2.value = false
+    }
+
+    socket2.value.onerror = error => {
+      console.error('WebSocket error:', error)
+    }
+  }
+
+  const sendMessage = () => {
+    if (newMessage.value.trim() !== '') {
+      socket.value.send(
+        JSON.stringify({
+          user: useUserStore().userInfo?.username,
+          message: newMessage.value
+        })
+      )
+      newMessage.value = ''
+    }
+  }
+
+  const sendMessage2 = () => {
+    if (newMessage2.value.trim() !== '') {
+      socket2.value.send(
+        JSON.stringify({
+          user: 'qinshihuang',
+          message: newMessage2.value
+        })
+      )
+      newMessage2.value = ''
+    }
+  }
+
+  const joinChat1 = () => {
+    if (!socket.value || socket.value.readyState === WebSocket.CLOSED) {
+      connectWebSocket1()
+    }
+  }
+
+  const joinChat2 = () => {
+    if (!socket2.value || socket2.value.readyState === WebSocket.CLOSED) {
+      connectWebSocket2()
+    }
+  }
+
+  function closeChat1() {
+    if (socket.value) {
+      socket.value.close()
+      ElMessage.success('WebSocket connection closed')
+      messages.value = []
+      newMessage.value = ''
+    }
+  }
+
+  function closeChat2() {
+    if (socket2.value) {
+      socket2.value.close()
+      ElMessage.success('WebSocket connection closed')
+      messages2.value = []
+      newMessage2.value = ''
+    }
+  }
+
+  async function clearAllChat() {
+    await clearChat()
     messages.value = []
-    newMessage.value = ''
-  }
-}
-
-function closeChat2() {
-  if (socket2.value) {
-    socket2.value.close()
-    ElMessage.success('WebSocket connection closed')
     messages2.value = []
-    newMessage2.value = ''
+    ElMessage.success('chat message cleared')
   }
-}
 
-async function clearAllChat() {
-  await clearChat()
-  messages.value = []
-  messages2.value = []
-  ElMessage.success('chat message cleared')
-}
-
-onBeforeUnmount(() => {
-  if (socket.value) {
-    socket.value.close()
-  }
-  if (socket2.value) {
-    socket2.value.close()
-  }
-})
+  onBeforeUnmount(() => {
+    if (socket.value) {
+      socket.value.close()
+    }
+    if (socket2.value) {
+      socket2.value.close()
+    }
+  })
 </script>
 
 <style lang="scss" scoped>
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  height: 300px;
-  min-width: 300px;
-  background-color: var(--el-bg-color);
-  box-sizing: border-box;
-  position: relative;
-}
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    min-width: 300px;
+    background-color: var(--el-bg-color);
+    box-sizing: border-box;
+    position: relative;
+  }
 
-.message-list {
-  height: 200px;
-  overflow-y: auto;
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  margin-bottom: 50px;
-}
+  .message-list {
+    height: 400px;
+    overflow-y: auto;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 50px;
+  }
 
-.message {
-  font-size: 12px;
-  background-color: var(--el-fill-color-light);
-  border-radius: 10px;
-  padding: 10px;
-  margin: 5px 0;
-  max-width: 70%;
-  word-wrap: break-word;
-  position: relative;
-}
+  .message {
+    font-size: 12px;
+    background-color: var(--el-fill-color-light);
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px 0;
+    word-wrap: break-word;
+    position: relative;
+    display: inline-block;
+  }
 
-.message::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: -10px;
-  border-width: 10px 10px 0 0;
-  border-style: solid;
-  border-color: var(--el-fill-color-light) transparent transparent transparent;
-}
+  .message-nobg {
+    color: red;
+    background-color: transparent !important;
+  }
 
-.input-area {
-  display: flex;
-  align-items: center;
-  position: absolute;
-  transform: translateX(-50%);
-  left: 50%;
-  bottom: 20px;
-  width: calc(100% - 20px);
-}
+  .input-area {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    transform: translateX(-50%);
+    left: 50%;
+    bottom: 20px;
+    width: calc(100% - 20px);
+  }
 
-.message-input {
-  flex: 1;
-  margin-right: 10px;
-}
+  .message-input {
+    flex: 1;
+    margin-right: 10px;
+  }
 
-.send-button {
-  padding: 10px 20px;
-  background-color: var(--el-color-primary);
-  color: var(--el-color-white);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
+  .send-button {
+    padding: 10px 20px;
+    background-color: var(--el-color-primary);
+    color: var(--el-color-white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
-.send-button:hover {
-  background-color: var(--el-color-primary-light-3);
-}
+  .send-button:hover {
+    background-color: var(--el-color-primary-light-3);
+  }
 
-.status-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-left: 5px;
-}
+  .status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-left: 5px;
+  }
 
-.online {
-  background-color: var(--el-color-success);
-}
+  .online {
+    background-color: var(--el-color-success);
+  }
 
-.offline {
-  background-color: var(--el-color-danger);
-}
+  .offline {
+    background-color: var(--el-color-danger);
+  }
 </style>
