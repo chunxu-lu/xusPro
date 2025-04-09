@@ -161,6 +161,18 @@ const menuItems = [
         title: '聊天室',
         groupTitle: true,
         path: '/function/chat'
+      },
+      {
+        index: '8',
+        title: '权限',
+        groupTitle: true,
+        path: '/function/permission'
+      },
+      {
+        index: '9',
+        title: '基础表单',
+        groupTitle: true,
+        path: '/function/basic-form'
       }
     ]
   }

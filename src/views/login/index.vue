@@ -39,7 +39,7 @@
 
 <script lang="ts" setup>
 import { useRouterStore, useThemeStore } from '@/pinia/index'
-import { doLogin, getUserInfo } from '@/api/login'
+import { doLogin, getUserInfo, getPath } from '@/api/login'
 import router from '@/router'
 import { User, Lock } from '@element-plus/icons-vue'
 import Verify from '@/components/verifition/Verify.vue'
@@ -80,6 +80,8 @@ async function login() {
   useUserStore().userInfo = res2.data
   router.push('/home')
   useRouterStore().activeIndex = '1'
+
+  getPath()
 }
 </script>
 

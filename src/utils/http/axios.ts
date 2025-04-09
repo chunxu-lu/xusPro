@@ -54,35 +54,41 @@ instance.interceptors.response.use(
 
 // 封装 GET POST 请求并导出
 export function request<T = any>(url = '', params = {}, type = 'POST', onUploadProgress = null): Promise<T> {
-  return new Promise((resolve, reject) => {
-    let promise
+  try {
+    return new Promise((resolve, reject) => {
+      let promise
 
-    if (type.toUpperCase() === 'GET') {
-      promise = instance.get(url, { params })
-    } else if (type.toUpperCase() === 'POST') {
-      const config = {
-        onUploadProgress: onUploadProgress
-          ? progressEvent => {
+      if (type.toUpperCase() === 'GET') {
+        promise = instance.get(url, { params })
+      } else if (type.toUpperCase() === 'POST') {
+        const config = {
+          onUploadProgress: onUploadProgress
+            ? progressEvent => {
               // 计算进度百分比
               if (progressEvent.lengthComputable) {
                 const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
                 onUploadProgress(percentCompleted) // 调用传入的回调函数
               }
             }
-          : undefined
+            : undefined
+        }
+        promise = instance.post(url, params, config)
+      } else {
+        promise = Promise.reject(new Error('不支持的请求类型'))
       }
-      promise = instance.post(url, params, config)
-    } else {
-      promise = Promise.reject(new Error('不支持的请求类型'))
-    }
 
-    // 处理返回
-    promise
-      .then(res => {
-        resolve(res)
-      })
-      .catch(err => {
-        reject(err)
-      })
-  })
+      // 处理返回
+      promise
+        .then(res => {
+          if(res.code !== 200) throw new Error(res.msg)
+          resolve(res)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  } catch (err) {
+    console.log(err)
+  }
+
 }

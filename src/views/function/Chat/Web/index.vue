@@ -119,13 +119,14 @@
       messages.value.push(JSON.parse(event.data))
     }
 
-    socket.value.onclose = () => {
-      console.log('WebSocket connection closed')
+    socket.value.onclose = (event) => {
+      console.log('WebSocket connection closed',event)
       isOnline.value = false
     }
 
     socket.value.onerror = error => {
-      console.error('WebSocket error:', error)
+      ElMessage.error('WebSocket connection error')
+      console.error('WebSocket error:', error.code)
     }
   }
 

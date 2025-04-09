@@ -44,6 +44,16 @@ const routes = [
             path: '/function/chat',
             name: 'Chat',
             component: () => import('@/views/function/Chat/index.vue')
+          },
+          {
+            path: '/function/permission',
+            name: 'Permission',
+            component: () => import('@/views/function/permission/index.vue')
+          },
+          {
+            path: '/function/basic-form',
+            name: 'BasicForm',
+            component: () => import('@/views/function/BasicForm/index.vue')
           }
         ]
       }
